@@ -156,7 +156,10 @@ namespace Fungus.EditorUtils
 
                 SerializedProperty suppressProp = serializedObject.FindProperty("suppressAllAutoSelections");
                 EditorGUILayout.PropertyField(suppressProp);
-                
+
+                SerializedProperty saveAllowedProp = serializedObject.FindProperty("isSavingAllowed");
+                EditorGUILayout.PropertyField(saveAllowedProp);
+
                 EditorGUI.indentLevel++;
                 if (callersFoldout = EditorGUILayout.Foldout(callersFoldout, "Callers"))
                 {
@@ -182,6 +185,9 @@ namespace Fungus.EditorUtils
                     }
                     command.ParentBlock = block;
                 }
+
+
+                EditorGUILayout.Space();
 
                 commandListAdaptor.DrawCommandList();
 
@@ -315,14 +321,18 @@ namespace Fungus.EditorUtils
 
 
             // Previous Command
-            if ((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.PageUp))
+            if (Event.current.type == EventType.KeyDown && (
+                  Event.current.keyCode == KeyCode.PageUp ||
+                  (FungusEditorPreferences.navigateCmdListWithArrows && Event.current.keyCode == KeyCode.UpArrow)))
             {
                 SelectPrevious();
                 GUI.FocusControl("dummycontrol");
                 Event.current.Use();
             }
             // Next Command
-            if ((Event.current.type == EventType.KeyDown) && (Event.current.keyCode == KeyCode.PageDown))
+            if (Event.current.type == EventType.KeyDown && (
+                  Event.current.keyCode == KeyCode.PageDown ||
+                  (FungusEditorPreferences.navigateCmdListWithArrows && Event.current.keyCode == KeyCode.DownArrow)))
             {
                 SelectNext();
                 GUI.FocusControl("dummycontrol");
